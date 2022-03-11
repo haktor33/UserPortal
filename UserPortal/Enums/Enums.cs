@@ -7,5 +7,6 @@ namespace UserPortal.Enums
         RegisterConfirm,
         ChangeStatus,
         Register,
+        Test,
     }
 }

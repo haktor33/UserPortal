@@ -10,7 +10,7 @@ namespace UserPortal.Controllers.Tests
         [Fact]
         public void PostTest()
         {
-            var result = KafkaService.SendToKafka("testMessage") as Confluent.Kafka.DeliveryResult<Confluent.Kafka.Null, string>;
+            var result = KafkaService.SendToKafka("testMessage"); ;
             Assert.Equal("testMessage", result.Value);
         }
     }

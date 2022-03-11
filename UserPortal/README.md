@@ -41,7 +41,9 @@ docker-compose up
 
 docker ps
 
-
-
+# Test Coverage Report 
+## Open Powershell/Commandline and goto UserPortalTest dircetory (cd UserPortalTest)
+## Run Below Code For Test Coverage Report 
+dotnet test /p:CollectCoverage=true
 
 

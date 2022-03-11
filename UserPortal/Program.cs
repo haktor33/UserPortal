@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using UserPortal.Context;
@@ -61,6 +60,19 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     services.AddSingleton<IKafkaService, KafkaService>();
     services.AddSingleton<IHostedService, KafkaConsumerHandler>();
     services.AddSingleton<Utils>();
+
+    // Create the ServiceProvider
+    var serviceProvider = services.BuildServiceProvider();
+
+    // serviceScopeMock will contain my ServiceProvider
+    var serviceScopeMock = new Moq.Mock<IServiceScope>();
+    serviceScopeMock.SetupGet<IServiceProvider>(s => s.ServiceProvider)
+        .Returns(serviceProvider);
+
+    // serviceScopeFactoryMock will contain my serviceScopeMock
+    var serviceScopeFactoryMock = new Moq.Mock<IServiceScopeFactory>();
+    serviceScopeFactoryMock.Setup(s => s.CreateScope())
+        .Returns(serviceScopeMock.Object);
 }
 
 

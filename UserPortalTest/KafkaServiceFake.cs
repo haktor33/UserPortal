@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using UserPortal.Enums;
 using System.Text.Json;
+using Confluent.Kafka;
 
 namespace UserPortalTest
 {
@@ -38,7 +39,7 @@ namespace UserPortalTest
             return Task.FromResult(user);
         }
 
-        public Task ResponseForTopicMesseageType(TopicMessageModel model)
+        public Task<DeliveryResult<Null, string>> ResponseForTopicMesseageType(TopicMessageModel model)
         {
             switch (model.Type)
             {
@@ -60,7 +61,7 @@ namespace UserPortalTest
                 default:
                     break;
             }
-            return Task.CompletedTask;
+            return null;
         }
 
 

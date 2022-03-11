@@ -20,7 +20,7 @@ namespace UserPortal.Services
             _scopeFactory = scopeFactory;
         }
 
-        public async Task ResponseForTopicMesseageType(TopicMessageModel model)
+        public async Task<DeliveryResult<Null, string>> ResponseForTopicMesseageType(TopicMessageModel model)
         {
             switch (model.Type)
             {
@@ -28,27 +28,32 @@ namespace UserPortal.Services
                     var registerReq = JsonSerializer.Deserialize<RegisterApprovementRequest>(model.Data.ToString());
                     var data = await RegisterApprovement(registerReq);
                     model.Data = data;
-                    SendToKafka(JsonSerializer.Serialize(model));
                     break;
                 case (int)TopicMessageType.ChangeStatus:
                     var changeStatusReq = JsonSerializer.Deserialize<ChangeStatusRequest>(model.Data.ToString());
                     var sdata = await ChangeStatus(changeStatusReq);
                     model.Data = sdata;
-                    SendToKafka(JsonSerializer.Serialize(model));
                     break;
                 case (int)TopicMessageType.UserList:
                     var request = JsonSerializer.Deserialize<PageRequest>(model.Data.ToString());
                     var list = await GetUserList(request);
                     model.Data = list;
-                    SendToKafka(JsonSerializer.Serialize(model));
+                    break;
+                case (int)TopicMessageType.Test:
+                    model.Data = model.Data;
                     break;
                 default:
                     break;
             }
+            return SendToKafka(JsonSerializer.Serialize(model));
         }
 
         public async Task<List<User>> GetUserList(PageRequest request)
         {
+            if (_scopeFactory == null)
+            {
+                return new List<User>();
+            }
             var skip = request.PageSize * (request.Current - 1);
             using (var scope = _scopeFactory.CreateScope())
             {
@@ -94,7 +99,7 @@ namespace UserPortal.Services
             }
         }
 
-        public static Object SendToKafka(string message)
+        public static DeliveryResult<Null, string> SendToKafka(string message)
         {
             using (var producer = new ProducerBuilder<Null, string>(config).Build())
             {
