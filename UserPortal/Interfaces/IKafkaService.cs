@@ -8,10 +8,8 @@ namespace UserPortal.Interfaces
     public interface IKafkaService
     {
         public Task ResponseForTopicMesseageType(TopicMessageModel model);
-
-        public  Task<List<User>> GetUserList(PageRequest request);
-
-        public  Task<User> RegisterApprovement(RegisterApprovementRequest request);
-  
+        public Task<List<User>> GetUserList(PageRequest request);
+        public Task<User> RegisterApprovement(RegisterApprovementRequest request);
+        public Task<User> ChangeStatus(ChangeStatusRequest request);
     }
 }

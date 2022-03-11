@@ -19,8 +19,10 @@ namespace UserPortal.Entities
         public string? Username { get; set; }
         [Column("password"), MaxLength(100), JsonIgnore]
         public string Password { get; set; }
-        [Column("status")]
+        [Column("active")]
         public bool Active { get; set; } = false;
+        [Column("approvement")]
+        public bool Approvement { get; set; } = false;
         [Column("registered_date")]
         public DateTime? CreateDate { get; set; }
     }

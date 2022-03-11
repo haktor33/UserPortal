@@ -54,6 +54,7 @@ namespace UserPortal.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUserList([FromQuery] PageRequest request)
         {
@@ -65,6 +66,7 @@ namespace UserPortal.Controllers
             return Ok(list);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> RegisterApprovement(RegisterApprovementRequest request)
         {
@@ -75,5 +77,19 @@ namespace UserPortal.Controllers
             var response = await _kafkaService.RegisterApprovement(request);
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var response = await _kafkaService.ChangeStatus(request);
+            return Ok(response);
+        }
+
+
     }
 }

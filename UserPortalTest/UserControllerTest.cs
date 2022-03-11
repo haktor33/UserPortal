@@ -135,7 +135,7 @@ namespace UserPortalTest
             var items = Assert.IsType<List<User>>(okResult.Value);
             Assert.Equal(3, items.Count);
         }
-        
+
         [Fact]
         public async void Approvement_InvalidObjectPassed_ReturnsBadRequest()
         {
@@ -165,8 +165,41 @@ namespace UserPortalTest
             // Assert
             var item = result.Value as User;
             Assert.IsType<User>(item);
-            Assert.Equal(request.Approvement, item.Active);
+            Assert.Equal(request.Approvement, item.Approvement);
         }
+
+        [Fact]
+        public async void ChangeStatus_InvalidObjectPassed_ReturnsBadRequest()
+        {
+            var missingItem = new ChangeStatusRequest { Active = true };
+            _controller.ModelState.AddModelError("UserId", "Required");
+            // Act
+            var badResponse = await _controller.ChangeStatus(missingItem);
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(badResponse);
+        }
+
+        [Fact]
+        public async void ChangeStatus_ValidObjectPassed_ReturnsOkResult()
+        {
+            var request = new ChangeStatusRequest { UserId = 2, Active = true };
+            var result = await _controller.ChangeStatus(request);
+            // Assert
+            Assert.IsType<OkObjectResult>(result);
+        }
+
+        [Fact]
+        public async void ChangeStatus_WhenCalled_ReturnsRightItem()
+        {
+            var request = new ChangeStatusRequest { UserId = 2, Active = true };
+            // Act
+            var result = (await _controller.ChangeStatus(request)) as OkObjectResult;
+            // Assert
+            var item = result.Value as User;
+            Assert.IsType<User>(item);
+            Assert.Equal(request.Active, item.Active);
+        }
+
 
     }
 

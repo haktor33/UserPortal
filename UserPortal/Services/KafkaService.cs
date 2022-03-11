@@ -9,10 +9,10 @@ using UserPortal.Models;
 
 namespace UserPortal.Services
 {
-    public class KafkaService: IKafkaService
+    public class KafkaService : IKafkaService
     {
-        private readonly ProducerConfig config = new ProducerConfig { BootstrapServers = "localhost:9092" };
-        private readonly string topic = "ManagementTopic";
+        private static readonly ProducerConfig config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+        private static readonly string topic = "ManagementTopic";
         private readonly IServiceScopeFactory _scopeFactory;
 
         public KafkaService(IServiceScopeFactory scopeFactory)
@@ -25,9 +25,15 @@ namespace UserPortal.Services
             switch (model.Type)
             {
                 case (int)TopicMessageType.RegisterConfirm:
-                    var registerApp = JsonSerializer.Deserialize<RegisterApprovementRequest>(model.Data.ToString());
-                    var data = await RegisterApprovement(registerApp);
+                    var registerReq = JsonSerializer.Deserialize<RegisterApprovementRequest>(model.Data.ToString());
+                    var data = await RegisterApprovement(registerReq);
                     model.Data = data;
+                    SendToKafka(JsonSerializer.Serialize(model));
+                    break;
+                case (int)TopicMessageType.ChangeStatus:
+                    var changeStatusReq = JsonSerializer.Deserialize<ChangeStatusRequest>(model.Data.ToString());
+                    var sdata = await ChangeStatus(changeStatusReq);
+                    model.Data = sdata;
                     SendToKafka(JsonSerializer.Serialize(model));
                     break;
                 case (int)TopicMessageType.UserList:
@@ -59,15 +65,36 @@ namespace UserPortal.Services
                 var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 var user = await dbContext.Users.Where(w => w.Id == request.UserId).FirstOrDefaultAsync();
                 if (user == null)
-                    throw new Exception("Username or Password not found");
-                user.Active = request.Approvement;
+                    throw new Exception("User not found");
+                if (user.Approvement)
+                {
+                    user.Approvement = request.Approvement;
+                    dbContext.Users.Update(user);
+                }
+                else
+                    dbContext.Users.Remove(user);
+
+                await dbContext.SaveChangesAsync();
+                return user;
+            }
+        }
+
+        public async Task<User> ChangeStatus(ChangeStatusRequest request)
+        {
+            using (var scope = _scopeFactory.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                var user = await dbContext.Users.Where(w => w.Id == request.UserId).FirstOrDefaultAsync();
+                if (user == null)
+                    throw new Exception("User not found");
+                user.Active = request.Active;
                 dbContext.Users.Update(user);
                 await dbContext.SaveChangesAsync();
                 return user;
             }
         }
 
-        public Object SendToKafka(string message)
+        public static Object SendToKafka(string message)
         {
             using (var producer = new ProducerBuilder<Null, string>(config).Build())
             {

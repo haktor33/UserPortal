@@ -5,5 +5,7 @@ namespace UserPortal.Enums
     {
         UserList,
         RegisterConfirm,
+        ChangeStatus,
+        Register,
     }
 }

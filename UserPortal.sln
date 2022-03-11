@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserPortal", "UserPortal\UserPortal.csproj", "{3E644800-2544-413B-A493-F6296DEA29EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserPortalTest", "UserPortalTest\UserPortalTest.csproj", "{485C1084-0958-456C-9A8B-3386FC718570}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserPortalTest", "UserPortalTest\UserPortalTest.csproj", "{485C1084-0958-456C-9A8B-3386FC718570}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

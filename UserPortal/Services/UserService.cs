@@ -9,6 +9,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using UserPortal.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using UserPortal.Enums;
 
 namespace UserPortal.Services
 {
@@ -53,6 +55,13 @@ namespace UserPortal.Services
                 throw new Exception(message);
             }
 
+            var topicModel = new TopicMessageModel
+            {
+                Data = user,
+                Type = (int)TopicMessageType.Register
+
+            };
+            KafkaService.SendToKafka(JsonSerializer.Serialize(topicModel));
             return user;
         }
 

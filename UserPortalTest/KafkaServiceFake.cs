@@ -23,7 +23,18 @@ namespace UserPortalTest
             var user = DummyData.userList.FirstOrDefault(x => x.Id == request.UserId);
             if (user == null)
                 throw new Exception("not exist");
-            user.Active = request.Approvement;
+            user.Approvement = request.Approvement;
+            if (request.Approvement == false)
+                DummyData.userList.Remove(user);
+            return Task.FromResult(user);
+        }
+
+        public Task<User> ChangeStatus(ChangeStatusRequest request)
+        {
+            var user = DummyData.userList.FirstOrDefault(x => x.Id == request.UserId);
+            if (user == null)
+                throw new Exception("not exist");
+            user.Active = request.Active;
             return Task.FromResult(user);
         }
 
@@ -33,12 +44,17 @@ namespace UserPortalTest
             {
                 case (int)TopicMessageType.RegisterConfirm:
                     var registerApp = JsonSerializer.Deserialize<RegisterApprovementRequest>(model.Data.ToString());
-                    var data =  RegisterApprovement(registerApp);
+                    var data = RegisterApprovement(registerApp);
                     model.Data = data;
+                    break;
+                case (int)TopicMessageType.ChangeStatus:
+                    var changeStatusReq = JsonSerializer.Deserialize<ChangeStatusRequest>(model.Data.ToString());
+                    var sdata = ChangeStatus(changeStatusReq);
+                    model.Data = sdata;
                     break;
                 case (int)TopicMessageType.UserList:
                     var request = JsonSerializer.Deserialize<PageRequest>(model.Data.ToString());
-                    var list =  GetUserList(request);
+                    var list = GetUserList(request);
                     model.Data = list;
                     break;
                 default:
@@ -47,6 +63,6 @@ namespace UserPortalTest
             return Task.CompletedTask;
         }
 
-       
+
     }
 }
