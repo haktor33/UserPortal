@@ -1,0 +1,52 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UserPortal.Entities;
+using UserPortal.Interfaces;
+using UserPortal.Models;
+using System;
+using System.Linq;
+using UserPortal.Enums;
+using System.Text.Json;
+
+namespace UserPortalTest
+{
+    public class KafkaServiceFake : IKafkaService
+    {
+        public Task<List<User>> GetUserList(PageRequest request)
+        {
+            var list = DummyData.userList;
+            return Task.FromResult(list);
+        }
+
+        public Task<User> RegisterApprovement(RegisterApprovementRequest request)
+        {
+            var user = DummyData.userList.FirstOrDefault(x => x.Id == request.UserId);
+            if (user == null)
+                throw new Exception("not exist");
+            user.Active = request.Approvement;
+            return Task.FromResult(user);
+        }
+
+        public Task ResponseForTopicMesseageType(TopicMessageModel model)
+        {
+            switch (model.Type)
+            {
+                case (int)TopicMessageType.RegisterConfirm:
+                    var registerApp = JsonSerializer.Deserialize<RegisterApprovementRequest>(model.Data.ToString());
+                    var data =  RegisterApprovement(registerApp);
+                    model.Data = data;
+                    break;
+                case (int)TopicMessageType.UserList:
+                    var request = JsonSerializer.Deserialize<PageRequest>(model.Data.ToString());
+                    var list =  GetUserList(request);
+                    model.Data = list;
+                    break;
+                default:
+                    break;
+            }
+            return Task.CompletedTask;
+        }
+
+       
+    }
+}
