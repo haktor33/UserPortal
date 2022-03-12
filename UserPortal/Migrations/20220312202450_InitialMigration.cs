@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace UserPortal.Migrations
 {
-    public partial class initialDb : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,8 @@ namespace UserPortal.Migrations
                     email = table.Column<string>(type: "text", nullable: false),
                     username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     password = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    status = table.Column<bool>(type: "boolean", nullable: false),
+                    active = table.Column<bool>(type: "boolean", nullable: false),
+                    approvement = table.Column<bool>(type: "boolean", nullable: false),
                     registered_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>

@@ -12,8 +12,8 @@ using UserPortal.Context;
 namespace UserPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220309101658_initialDb")]
-    partial class initialDb
+    [Migration("20220312202450_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,11 @@ namespace UserPortal.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("boolean")
-                        .HasColumnName("status");
+                        .HasColumnName("active");
+
+                    b.Property<bool>("Approvement")
+                        .HasColumnType("boolean")
+                        .HasColumnName("approvement");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone")

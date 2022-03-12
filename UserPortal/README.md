@@ -1,11 +1,19 @@
 # Database Configuration
+##Configure Database Connection String 
+
+Replace DefaultConnectionString in appsettings.json with your local/server  connection string
+
 ## Make sure you have already installed the dotnet-ef tool, which can be done something like this
+
 dotnet tool install dotnet-ef -g
 
 ## Powershell/Commandline as to start adding the database and create our first initial tables
 ### To Add Database
+
 dotnet ef database update
+
 ### To add the migration
+
 dotnet ef migrations add InitialMigration
 
 # Apache Kafka Using Docker Configuration
@@ -13,6 +21,7 @@ dotnet ef migrations add InitialMigration
 https://docs.docker.com/desktop/windows/install/
 
 ##Creating a docker-compose.yml file
+
 version: '2'
 services:
   zookeeper:
@@ -32,6 +41,7 @@ services:
 
 
 ## Run Docker File
+
 Navigate via the command line to the folder where you saved the docker-compose.yml file.
 Then, run the following command to start the images:
 
@@ -44,6 +54,48 @@ docker ps
 # Test Coverage Report 
 ## Open Powershell/Commandline and goto UserPortalTest dircetory (cd UserPortalTest)
 ## Run Below Code For Test Coverage Report 
+
 dotnet test /p:CollectCoverage=true
 
+#Create Docker Image for UserPortal & Management 
 
+## Build UserPortal image
+
+Open new Powershell/Commandline and locate your application project root folder (find Dockerfile place)
+
+Use the following command to create a new docker image for userportal app.
+
+docker build . -t dotnet-userportal
+
+### Download Postgres Docker Image and Run
+
+Use the following command to create a new docker image 
+
+docker pull postgres
+
+Run image
+
+docker run --name postgres -e POSTGRES_PASSWORD=123456 -d postgres
+
+### Running the Docker Image
+
+To run the newly created Docker image, use the following command
+
+docker run --name dotnet-userportal -p 8081:80 -d dotnet-userportal:latest
+
+### Compose Configure
+
+docker-compose build
+
+docker-compose up
+
+### Run Migaration File
+#### The modified connection string would appear as shown below:
+
+User ID=postgres;Password=123456;Server=localhost;Port=8099;Database=PORTAL;Integrated Security=true;Pooling=true;
+
+#### Next, in the package manager console window, we will execute the commands below:
+
+dotnet ef database update --project UserPortal
+
+#### Once we have migrated the database successfully, we will edit the connection string back to the previous values that we had set

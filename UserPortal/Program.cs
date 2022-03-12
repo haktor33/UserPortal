@@ -7,7 +7,9 @@ using UserPortal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+if (string.IsNullOrEmpty(connectionString))
+    connectionString = builder.Configuration.GetConnectionString("ProdConnectionString");
 
 {
     var services = builder.Services;
@@ -60,19 +62,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     services.AddSingleton<IKafkaService, KafkaService>();
     services.AddSingleton<IHostedService, KafkaConsumerHandler>();
     services.AddSingleton<Utils>();
-
-    // Create the ServiceProvider
-    var serviceProvider = services.BuildServiceProvider();
-
-    // serviceScopeMock will contain my ServiceProvider
-    var serviceScopeMock = new Moq.Mock<IServiceScope>();
-    serviceScopeMock.SetupGet<IServiceProvider>(s => s.ServiceProvider)
-        .Returns(serviceProvider);
-
-    // serviceScopeFactoryMock will contain my serviceScopeMock
-    var serviceScopeFactoryMock = new Moq.Mock<IServiceScopeFactory>();
-    serviceScopeFactoryMock.Setup(s => s.CreateScope())
-        .Returns(serviceScopeMock.Object);
 }
 
 
@@ -82,11 +71,11 @@ var app = builder.Build();
 
 {
     // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    //if (app.Environment.IsDevelopment())
+    //{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    //}
 
     app.UseDeveloperExceptionPage();
     // global cors policy

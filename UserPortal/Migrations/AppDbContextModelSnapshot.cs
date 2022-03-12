@@ -33,7 +33,11 @@ namespace UserPortal.Migrations
 
                     b.Property<bool>("Active")
                         .HasColumnType("boolean")
-                        .HasColumnName("status");
+                        .HasColumnName("active");
+
+                    b.Property<bool>("Approvement")
+                        .HasColumnType("boolean")
+                        .HasColumnName("approvement");
 
                     b.Property<DateTime?>("CreateDate")
                         .HasColumnType("timestamp with time zone")

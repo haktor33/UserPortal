@@ -1,0 +1,37 @@
+﻿version: '3.7'
+
+networks:
+  portal-network:
+    driver: bridge
+
+services:
+
+  web:
+    container_name: 'dotnet-userportal'
+    image: dotnet-userportal:lastest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - "8081:80"
+    environment:
+        DB_CONNECTION_STRING: "host=db;username=postgres;password=123456;port=8099;database=PORTAL;"
+    links:
+        - db
+    networks:
+      - portal-network
+
+  db:
+    container_name: 'postgres'
+    image: postgres
+    restart: always
+    ports:
+      - 8099:5432
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: "PORTAL"
+    networks:
+      - portal-network
+
+
