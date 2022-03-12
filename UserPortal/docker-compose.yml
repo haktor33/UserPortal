@@ -15,8 +15,8 @@ services:
     ports:
      - "8081:80"
     environment:
-        DB_CONNECTION_STRING: "host=db;username=postgres;password=123456;port=8099;database=PORTAL;"
-    links:
+        DB_CONNECTION_STRING: "host=db;username=postgres;password=123456;port=5432;database=PORTAL;"
+    depends_on:
         - db
     networks:
       - portal-network

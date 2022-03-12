@@ -11,7 +11,7 @@ namespace UserPortal.Services
 {
     public class KafkaService : IKafkaService
     {
-        private static readonly ProducerConfig config = new ProducerConfig { BootstrapServers = "localhost:9092" };
+        private static readonly ProducerConfig config = new ProducerConfig { BootstrapServers = "kafka:9092" };
         private static readonly string topic = "ManagementTopic";
         private readonly IServiceScopeFactory _scopeFactory;
 

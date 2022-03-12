@@ -1,5 +1,5 @@
 # Database Configuration
-##Configure Database Connection String 
+## Configure Database Connection String 
 
 Replace DefaultConnectionString in appsettings.json with your local/server  connection string
 
@@ -20,7 +20,7 @@ dotnet ef migrations add InitialMigration
 ## Install Docker Desktop on Windows
 https://docs.docker.com/desktop/windows/install/
 
-##Creating a docker-compose.yml file
+## Creating a docker-compose.yml file
 
 version: '2'
 services:
@@ -57,7 +57,7 @@ docker ps
 
 dotnet test /p:CollectCoverage=true
 
-#Create Docker Image for UserPortal & Management 
+# Create Docker Image for UserPortal & Management 
 
 ## Build UserPortal image
 
@@ -66,16 +66,6 @@ Open new Powershell/Commandline and locate your application project root folder 
 Use the following command to create a new docker image for userportal app.
 
 docker build . -t dotnet-userportal
-
-### Download Postgres Docker Image and Run
-
-Use the following command to create a new docker image 
-
-docker pull postgres
-
-Run image
-
-docker run --name postgres -e POSTGRES_PASSWORD=123456 -d postgres
 
 ### Running the Docker Image
 
@@ -90,12 +80,6 @@ docker-compose build
 docker-compose up
 
 ### Run Migaration File
-#### The modified connection string would appear as shown below:
-
-User ID=postgres;Password=123456;Server=localhost;Port=8099;Database=PORTAL;Integrated Security=true;Pooling=true;
-
-#### Next, in the package manager console window, we will execute the commands below:
+#### In the package manager console window, we will execute the commands below:
 
 dotnet ef database update --project UserPortal
-
-#### Once we have migrated the database successfully, we will edit the connection string back to the previous values that we had set
