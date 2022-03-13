@@ -1,5 +1,6 @@
 ﻿using Confluent.Kafka;
 using System.Text.Json;
+using UserPortal.Helper;
 using UserPortal.Interfaces;
 using UserPortal.Models;
 
@@ -25,10 +26,11 @@ namespace UserPortal.Services
 
         private void Listener()
         {
+          
             var conf = new ConsumerConfig
             {
                 GroupId = "st_consumer_group",
-                BootstrapServers = "kafka:9092",
+                BootstrapServers = Utils.GetKafkaConfigValue(),
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
             using (var builder = new ConsumerBuilder<Ignore,
@@ -39,7 +41,7 @@ namespace UserPortal.Services
                 try
                 {
                     while (true)
-                    {
+                    {                       
                         var consumer = builder.Consume(cancelToken.Token);
                         Console.WriteLine($"Message: {consumer.Message.Value} received from {consumer.TopicPartitionOffset}");
                         var model = JsonSerializer.Deserialize<TopicMessageModel>(consumer.Message.Value);

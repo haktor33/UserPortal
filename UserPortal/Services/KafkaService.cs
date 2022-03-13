@@ -4,6 +4,7 @@ using System.Text.Json;
 using UserPortal.Context;
 using UserPortal.Entities;
 using UserPortal.Enums;
+using UserPortal.Helper;
 using UserPortal.Interfaces;
 using UserPortal.Models;
 
@@ -11,7 +12,7 @@ namespace UserPortal.Services
 {
     public class KafkaService : IKafkaService
     {
-        private static readonly ProducerConfig config = new ProducerConfig { BootstrapServers = "kafka:9092" };
+        private static readonly ProducerConfig config = new ProducerConfig { BootstrapServers = Utils.GetKafkaConfigValue() };
         private static readonly string topic = "ManagementTopic";
         private readonly IServiceScopeFactory _scopeFactory;
 

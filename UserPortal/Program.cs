@@ -8,6 +8,10 @@ using UserPortal.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+var kafkaServerPath = Environment.GetEnvironmentVariable("KAFKA_CONNECT");
+
+Console.WriteLine($"program.cs----kafkaServerPath:{kafkaServerPath}");
+
 if (string.IsNullOrEmpty(connectionString))
     connectionString = builder.Configuration.GetConnectionString("ProdConnectionString");
 

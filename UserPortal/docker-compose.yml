@@ -1,11 +1,27 @@
 ﻿version: '3.7'
-
 networks:
   portal-network:
     driver: bridge
 
 services:
-
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - portal-network
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "UserPortalTopic:1:1,ManagementTopic:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - portal-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   web:
     container_name: 'dotnet-userportal'
     image: dotnet-userportal:lastest
@@ -16,8 +32,10 @@ services:
      - "8081:80"
     environment:
         DB_CONNECTION_STRING: "host=db;username=postgres;password=123456;port=5432;database=PORTAL;"
+        KAFKA_CONNECT: kafka:9092
     depends_on:
         - db
+        - kafka
     networks:
       - portal-network
 
@@ -33,5 +51,4 @@ services:
       POSTGRES_DB: "PORTAL"
     networks:
       - portal-network
-
 
