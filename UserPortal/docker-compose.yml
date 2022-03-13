@@ -22,9 +22,9 @@ services:
       - portal-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  web:
-    container_name: 'dotnet-userportal'
-    image: dotnet-userportal:lastest
+  userportal:
+    container_name: userportal-webapi
+    image: userportal/webapi:lastest
     build:
       context: .
       dockerfile: Dockerfile
