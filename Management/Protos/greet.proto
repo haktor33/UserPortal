@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option csharp_namespace = "Management";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // Sends a greeting
+  rpc RegisterConfirmation (RegisterApprovementRequest) returns (DefaultReply);
+  rpc ChangeStatus (ChangeStatusRequest) returns (DefaultReply);
+  rpc GetUserList (UserListRequest) returns (DefaultReply);
+}
+
+message DefaultReply {
+  string message = 1;
+}
+
+message RegisterApprovementRequest {
+    int32 UserId = 1;
+    bool Approvement = 2;
+}
+
+message ChangeStatusRequest {
+    int32 UserId = 1;
+    bool Active = 2;
+}
+
+message UserListRequest {
+    int32 Current = 1;
+    int32 PageSize = 2;
+}
+
