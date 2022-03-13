@@ -1,4 +1,4 @@
-﻿version: '3.7'
+﻿version: '3'
 networks:
   portal-network:
     driver: bridge
@@ -25,13 +25,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   management:
-    container_name: management-grpc
-    image: management/grpc:lastest
+    image: management:lastest
     build:
       context: .
       dockerfile: /Management/Dockerfile
     ports:
-     - "8082:80"
+     - "8070-8073:80"
+    deploy:
+       replicas: 3
+       update_config:
+        parallelism: 3
+       restart_policy:
+        condition: on-failure
     environment:
         KAFKA_CONNECT: kafka:9092
     depends_on:
@@ -40,13 +45,18 @@ services:
       - portal-network
 
   userportal:
-    container_name: userportal-webapi
-    image: userportal/webapi:lastest
+    image: userportal:lastest
     build:
       context: .
       dockerfile: /UserPortal/Dockerfile
-    ports:
-     - "8081:80"
+    ports: 
+    - "6379-6385:80"
+    deploy:
+       replicas: 2
+       update_config:
+        parallelism: 2
+       restart_policy:
+        condition: on-failure
     environment:
         DB_CONNECTION_STRING: "host=db;username=postgres;password=123456;port=5432;database=PORTAL;"
         KAFKA_CONNECT: kafka:9092
