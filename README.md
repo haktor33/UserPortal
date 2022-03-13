@@ -1,4 +1,4 @@
-# user Portal and Management Applicatians (Used Docker and Apache Kafka)
+# User Portal and Management Applicatians (Used Docker and Apache Kafka)
 ## Install Docker Desktop on Windows
 https://docs.docker.com/desktop/windows/install
 
