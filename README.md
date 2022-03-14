@@ -26,6 +26,8 @@ http://localhost:6379/swagger/index.html
 ## Run Below Code For Test Coverage Report 
 dotnet test /p:CollectCoverage=true
 
+## Note: You must run on debug mode for all of test
+
 
 ## If you want to test project on debug mode without docker then  change docker-compose.yml commands below:
 
