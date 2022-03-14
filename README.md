@@ -17,6 +17,10 @@ dotnet ef database update --project UserPortal
 
 docker-compose up --scale userportal=2 --scale management=3 -d
 
+### Launch User Portal Application
+
+http://localhost:6379/swagger/index.html
+
 # Test Coverage Report 
 ## Open Powershell/Commandline and goto UserPortalTest dircetory (cd UserPortalTest)
 ## Run Below Code For Test Coverage Report 
