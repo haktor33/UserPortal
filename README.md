@@ -17,6 +17,11 @@ dotnet ef database update --project UserPortal
 
 docker-compose up --scale userportal=2 --scale management=3 -d
 
+# Test Coverage Report 
+## Open Powershell/Commandline and goto UserPortalTest dircetory (cd UserPortalTest)
+## Run Below Code For Test Coverage Report 
+dotnet test /p:CollectCoverage=true
+
 
 ## If you want to test project on debug mode without docker then  change docker-compose.yml commands below:
 
